@@ -4,91 +4,113 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using System.Text; 
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PromilleCalc
 {
 
-public partial class Form1 : Form
-{
-private double k,t,p=0;
+    public partial class Form1 : Form
+    {
+        private double count=0, p = 0;
 
 
-public Form1()
-{
-InitializeComponent();
-}
+        public Form1()
+        {
+            InitializeComponent();
+        }
 
-private void button2_Click(object sender, EventArgs e)
-{
-p = double.Parse(label6.Text); 
-textBox2.Text = "";
-textBox3.Text = "";
-}
+        private void button2_Click(object sender, EventArgs e)
+        {
+            count = 0;
+            p = double.Parse(label6.Text);
+            textBox2.Text = "";
+            textBox3.Text = "";
+        }
 
-private void button3_Click(object sender, EventArgs e)
-{
-textBox1.Text= "";
-textBox2.Text = "";
-textBox3.Text = "";
-label6.Text = "";
-label8.Text = "";
-label10.Text = "";
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            label6.Text = "";
+            label8.Text = "";
+            label10.Text = "";
+            checkBox1.ThreeState = false;
+            count = 0;
+            p = 0;
+        }
 
-}
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedItem.ToString() == "Вино 12" || comboBox1.SelectedItem.ToString() == "Шампанское 12")
+                textBox3.Text = "12";
+            if (comboBox1.SelectedItem.ToString() == "Абсент 70")
+                textBox3.Text = "70";
+            if (comboBox1.SelectedItem.ToString() == "Биттер 45")
+                textBox3.Text = "45";
+            if (comboBox1.SelectedItem.ToString() == "Портвейн 20")
+                textBox3.Text = "20";
+            if (comboBox1.SelectedItem.ToString() == "Текила 55")
+                textBox3.Text = "55";
+            if (comboBox1.SelectedItem.ToString() == "Самбука 42")
+                textBox3.Text = "42";
+            if (comboBox1.SelectedItem.ToString() == "Пиво 4.5")
+                textBox3.Text = "4.5";
+            if (comboBox1.SelectedItem.ToString() == "Вермут 18")
+                textBox3.Text = "18";
+            if (comboBox1.SelectedItem.ToString() == "Водка 40" || comboBox1.SelectedItem.ToString() == "Виски 40" || comboBox1.SelectedItem.ToString() == "Коньяк 40")
+                textBox3.Text = "40";
+        }
 
-private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-{
-if (comboBox1.SelectedItem.ToString() == "Вино 12" || comboBox1.SelectedItem.ToString() == "Шампанское 12")
-textBox3.Text = "12";
-if (comboBox1.SelectedItem.ToString() == "Абсент 70")
-textBox3.Text = "70";
-if (comboBox1.SelectedItem.ToString() == "Биттер 45")
-textBox3.Text = "45";
-if (comboBox1.SelectedItem.ToString() == "Портвейн 20")
-textBox3.Text = "20";
-if (comboBox1.SelectedItem.ToString() == "Текила 55")
-textBox3.Text = "55";
-if (comboBox1.SelectedItem.ToString() == "Самбука 42")
-textBox3.Text = "42";
-if (comboBox1.SelectedItem.ToString() == "Пиво 4.5")
-textBox3.Text = "4.5";
-if (comboBox1.SelectedItem.ToString() == "Вермут 18")
-textBox3.Text = "18";
-if (comboBox1.SelectedItem.ToString() == "Водка 40" || comboBox1.SelectedItem.ToString() == "Виски 40" || comboBox1.SelectedItem.ToString() == "Коньяк 40" )
-textBox3.Text = "40";
-}
+        private void button4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Калькулятор промилле не может точно определить точное количество алкоголя в крови. Допустимый уроень промиле в РФ 0.35 промилле. ");
+        }
 
-private void button1_Click(object sender, EventArgs e)
-{
-double a, b, c,time,time1;
-if (radioButton1.Checked)
-{
-k = 0.7;
-t = 0.15;
-}
-else
-{
-k = 0.6;
-t = 0.12;
-}
-a = double.Parse(textBox1.Text);
-b = double.Parse(textBox2.Text);
-c = double.Parse(textBox3.Text);
-p =p+ 0.9 * 0.79 * 0.01 * c * b / a / k;
-label6.Text = p.ToString("#.##");
+        private void button1_Click(object sender, EventArgs e)
+        {
+            count++;
+            if (count != 1)
+                (sender as Button).Enabled = false;
+            else
+            {
+                double a, b, c, time, time1,l,k,t;
+                if (checkBox1.Checked)
+                {
+                    l = 0.7;
+                }
+                else
+                {
+                    l = 0.9;
+                }
+                if (radioButton1.Checked)
+                {
+                    k = 0.7;
+                    t = 0.15;
+                }
+                else
+                {
+                    k = 0.6;
+                    t = 0.12;
+                }
+                a = double.Parse(textBox1.Text);
+                b = double.Parse(textBox2.Text);
+                c = double.Parse(textBox3.Text);
+                p = p + l* 0.79 * 0.01 * c * b / a / k;
+                label6.Text = p.ToString("0.##");
 
-time = p / t;
-int i = (int)time;
-double frac = (int)((time - i) * 60);
+                time = p / t;
+                int i = (int)time;
+                double frac = (int)((time - i) * 60);
 
-label8.Text = i.ToString()+"часов " +frac.ToString("#.##")+"минут" ;
-time1 = (p - 0.35) / t;
-i = (int)time1;
-frac = (int)((time1 - i) * 60);
-label10.Text = i.ToString() + "часов " + frac.ToString("#.##") + "минут";
-}
-}
+                label8.Text = i.ToString() + " часов " + frac.ToString() + "минут";
+                time1 = (p - 0.35) / t;
+                i = (int)time1;
+                frac = (int)((time1 - i) * 60);
+                label10.Text = i.ToString() + " часов " + frac.ToString() + "минут";
+            }
+        }
+    }
 }
